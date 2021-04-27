@@ -19,6 +19,11 @@ namespace InventoryControlModel
             ManufacturerName = manufacturerName;
         }
 
+        public override string ToString()
+        {
+            return $"Attributes: {equipmentName}, {acquisitionPrice}, Serial = {serialNumber}, Manufacturing Date = {manufacturingDate}, ManufacturerName = {manufacturerName}";
+        }
+
         public string EquipmentName
         {
             get { return equipmentName; }

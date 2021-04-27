@@ -26,12 +26,7 @@ namespace InventoryControlConsole
                 {
                     Equipment equip = equipmentArray[i];
                     Console.WriteLine($"*Equipment {i}:");
-                    Console.WriteLine("  -EquipmentName = " + equip.EquipmentName);
-                    Console.WriteLine("  -AcquisitionPrice = " + equip.AcquisitionPrice);
-                    Console.WriteLine("  -SerialNumber = " + equip.SerialNumber);
-                    Console.WriteLine("  -ManufacturingDate = " + equip.ManufacturingDate);
-                    Console.WriteLine("  -ManufacturerName = " + equip.ManufacturerName);
-                    Console.WriteLine("  -Equipment name = " + equip.EquipmentName);
+                    Console.WriteLine("  -" + equip.ToString());
                 }
             }
         }
@@ -45,11 +40,7 @@ namespace InventoryControlConsole
                 {
                     MaintenanceCall maint = maintenanceCallArray[i];
                     Console.WriteLine($"*Maintenance Call {i}:");
-                    Console.WriteLine("  -TitleName = " + maint.TitleName);
-                    Console.WriteLine("  -DescriptioName = " + maint.DescriptioName);
-                    Console.WriteLine("  -Equipment = " + maint.Equipment.EquipmentName);
-                    Console.WriteLine("  -OpeningDate = " + maint.OpeningDate);
-                    Console.WriteLine("  -DaysOpen = " + (DateTime.Now - maint.OpeningDate).Days.ToString());
+                    Console.WriteLine("  -" + maint.ToString());
                 }
             }
         }
