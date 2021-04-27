@@ -6,8 +6,7 @@ namespace InventoryControlConsole
 {
     class Program
     {
-        private static Equipment[] equipmentArray = new Equipment[20];
-        private static MaintenanceCall[] maintenanceCallArray = new MaintenanceCall[20];
+        static InventoryManager inventoryManager = new InventoryManager();
 
         private static void ShowErrorText(string errorMessage)
         {
@@ -17,152 +16,14 @@ namespace InventoryControlConsole
             //Console.ReadLine();
         }
 
-        private static void ViewEquipments()
+        private static void ShowSucessText(string sucessMessage)
         {
-            Console.WriteLine("-+-+-+-+- REGISTERED EQUIPMENTS -+-+-+-+-");
-            for (int i=0; i < equipmentArray.Length; i++)
-            {
-                if (equipmentArray[i] != null)
-                {
-                    Equipment equip = equipmentArray[i];
-                    Console.WriteLine($"*Equipment {i}:");
-                    Console.WriteLine("  -" + equip.ToString());
-                }
-            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(sucessMessage);
+            Console.ForegroundColor = ConsoleColor.Cyan;
         }
 
-        private static void ViewMaintenanceCalls()
-        {
-            Console.WriteLine("-+-+-+-+- REGISTERED MAINTENANCES -+-+-+-+-");
-            for (int i = 0; i < maintenanceCallArray.Length; i++)
-            {
-                if (maintenanceCallArray[i] != null)
-                {
-                    MaintenanceCall maint = maintenanceCallArray[i];
-                    Console.WriteLine($"*Maintenance Call {i}.:");
-                    Console.WriteLine("  -" + maint.ToString());
-                    Console.WriteLine("  -Days Open: " + maint.DaysOpen().ToString());
-                }
-            }
-        }
-        
-        private static void RegisterEquipment()
-        {
-            try
-            {
-                Console.WriteLine("-Enter the name of the new equipment. Must be a string bigger than 6.");
-                string name = Console.ReadLine();
-                Console.WriteLine("-Enter the aquisition price of the new equipment. Must be a valid.");
-                string price = Console.ReadLine();
-                Console.WriteLine("-Enter the serial number.");
-                string serial = Console.ReadLine();
-                Console.WriteLine("-Enter the manufacturer name.");
-                string manufacturer = Console.ReadLine();
-
-                Equipment newEquipment = new Equipment(name, float.Parse(price), serial, DateTime.Now, manufacturer);
-
-                for (int i = 0; i < equipmentArray.Length; i++)
-                {
-                    if (equipmentArray[i] == null)
-                    {
-                        equipmentArray[i] = newEquipment;
-                        break;
-                    }
-                }
-
-                Console.WriteLine("Sucessfully added " + name);
-            }
-            catch (Exception e)
-            {
-                ShowErrorText(e.Message);
-            }
-        }
-        private static void RegisterMaintenanceCall()
-        {
-            try
-            {
-                Console.WriteLine("-Enter the name of the new maintenance call. ");
-                string name = Console.ReadLine();
-                Console.WriteLine("-Enter the description of the new maintenance call. ");
-                string desc = Console.ReadLine();
-                Console.WriteLine("-Enter the index of equipment new maintenance call. ");
-                string indx = Console.ReadLine();
-
-                MaintenanceCall newMaintenance = new MaintenanceCall(name, desc, equipmentArray[int.Parse(indx)], DateTime.Now);
-
-                for (int i = 0; i < maintenanceCallArray.Length; i++)
-                {
-                    if (maintenanceCallArray[i] == null)
-                    {
-                        maintenanceCallArray[i] = newMaintenance;
-                        break;
-                    }
-                }
-
-                Console.WriteLine("Sucessfully added " + name);
-            }
-            catch (Exception e)
-            {
-                ShowErrorText(e.Message);
-            }
-        }
-
-        private static void EditEquiment(int arrayIndex)
-        {
-            if (!DeleteEquipment(arrayIndex))
-            {
-                ShowErrorText("Operation error: Index not found or out of bounds.");
-            }
-            else
-            {
-                RegisterEquipment();
-            }
-        }
-
-        private static void EditMaintenanceCall(int arrayIndex)
-        {
-            if (!DeleteMaintenanceCall(arrayIndex))
-            {
-                ShowErrorText("Operation error: Index not found or out of bounds.");
-            }
-            else
-            {
-                RegisterMaintenanceCall();
-            }
-        }
-
-        private static bool DeleteEquipment(int arrayIndex)
-        {
-            try
-            {
-                if (equipmentArray[arrayIndex] != null)
-                {
-                    equipmentArray[arrayIndex] = null;
-                    Console.WriteLine("Delete operation sucessful");
-                    return true;
-                }
-            }
-            catch (IndexOutOfRangeException){}
-            return false;
-        }
-
-        private static bool DeleteMaintenanceCall(int arrayIndex)
-        {
-            try
-            {
-                if (maintenanceCallArray[arrayIndex] != null)
-                {
-                    maintenanceCallArray[arrayIndex] = null;
-                    Console.WriteLine("Delete operation sucessful");
-                    return true;
-                }
-                
-            }
-            catch (IndexOutOfRangeException){}
-            return false;
-        }
-
-        private static void EquipmentControl()
+        private static void EquipmentMenu()
         {
             Console.WriteLine("-+-+-+-+- EQUIPMENTS -+-+-+-+-");
             Console.WriteLine("-Enter the desired operation. Commands:");
@@ -179,20 +40,20 @@ namespace InventoryControlConsole
             switch (operationOption.ToLowerInvariant())
             {
                 case "show":
-                    ViewEquipments();
+                    Console.WriteLine(inventoryManager.ViewEquipments());
                     break;
 
                 case "regis":
-                    RegisterEquipment();
+                    Console.WriteLine(inventoryManager.RegisterEquipment());
                     break;
 
                 case "edit":
-                    ViewEquipments();
+                    Console.WriteLine(inventoryManager.ViewEquipments());
                     Console.WriteLine("-Enter the index of the Equipment to edit. Must be an integer.");
                     indexString = Console.ReadLine();
                     if (int.TryParse(indexString, out index))
                     {
-                        EditEquiment(index);
+                        Console.WriteLine(inventoryManager.EditEquiment(index));
                     }
                     else
                     {
@@ -202,15 +63,12 @@ namespace InventoryControlConsole
                     break;
 
                 case "delet":
-                    ViewEquipments();
+                    Console.WriteLine(inventoryManager.ViewEquipments());
                     Console.WriteLine("-Enter the index of the Equipment to delete. Must be an integer.");
                     indexString = Console.ReadLine();
                     if(int.TryParse(indexString, out  index))
                     {
-                        if (!DeleteEquipment(index))
-                        {
-                            ShowErrorText("Operation error: Index not found or out of bounds.");
-                        }
+                        Console.WriteLine(inventoryManager.DeleteEquipment(index));
                     }
                     else
                     {
@@ -224,7 +82,7 @@ namespace InventoryControlConsole
             }
         }
 
-        private static void MaintenanceCallControl()
+        private static void MaintenanceCallMenu()
         {
             Console.WriteLine("-+-+-+-+- MAINTENANCE CALLS -+-+-+-+-");
             Console.WriteLine("-Enter the desired operation. Commands:");
@@ -241,20 +99,20 @@ namespace InventoryControlConsole
             switch (operationOption.ToLowerInvariant())
             {
                 case "show":
-                    ViewMaintenanceCalls();
+                    Console.WriteLine(inventoryManager.ViewMaintenanceCalls());
                     break;
 
                 case "regis":
-                    RegisterMaintenanceCall();
+                    Console.WriteLine(inventoryManager.RegisterMaintenanceCall());
                     break;
 
                 case "edit":
-                    ViewMaintenanceCalls();
+                    Console.WriteLine(inventoryManager.ViewMaintenanceCalls());
                     Console.WriteLine("-Enter the index of the Maintenance to edit. Must be an integer.");
                     indexString = Console.ReadLine();
                     if (int.TryParse(indexString, out index))
                     {
-                        EditMaintenanceCall(index);
+                        Console.WriteLine(inventoryManager.EditMaintenanceCall(index));
                     }
                     else
                     {
@@ -264,15 +122,12 @@ namespace InventoryControlConsole
                     break;
 
                 case "delet":
-                    ViewMaintenanceCalls();
+                    Console.WriteLine(inventoryManager.ViewMaintenanceCalls());
                     Console.WriteLine("-Enter the index of the Equipment to delete. Must be an integer.");
                     indexString = Console.ReadLine();
                     if (int.TryParse(indexString, out index))
                     {
-                        if (!DeleteMaintenanceCall(index))
-                        {
-                            ShowErrorText("Operation error: Index not found or out of bounds.");
-                        }
+                        Console.WriteLine(inventoryManager.DeleteMaintenanceCall(index));
                     }
                     else
                     {
@@ -302,11 +157,11 @@ namespace InventoryControlConsole
                 switch (operationOption.ToLowerInvariant())
                 {
                     case "equip":
-                        EquipmentControl();
+                        EquipmentMenu();
                         break;
 
                     case "maint":
-                        MaintenanceCallControl();
+                        MaintenanceCallMenu();
                         break;
 
                     case "exit":
