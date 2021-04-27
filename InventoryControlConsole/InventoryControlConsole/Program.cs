@@ -39,8 +39,9 @@ namespace InventoryControlConsole
                 if (maintenanceCallArray[i] != null)
                 {
                     MaintenanceCall maint = maintenanceCallArray[i];
-                    Console.WriteLine($"*Maintenance Call {i}:");
+                    Console.WriteLine($"*Maintenance Call {i}.:");
                     Console.WriteLine("  -" + maint.ToString());
+                    Console.WriteLine("  -Days Open: " + maint.DaysOpen().ToString());
                 }
             }
         }
